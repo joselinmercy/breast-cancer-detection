@@ -137,16 +137,17 @@ if uploaded_file:
 
     prediction = [random.random() for _ in classes]
     prediction = np.array([prediction])
-         # Card
-            st.markdown(f"""
-            <div class="card">
-            <h4>{name}</h4>
-            <p>Age: {age} | Gender: {gender}</p>
-            <hr>
-            <h3>Diagnosis: {result.upper()}</h3>
-            <p>Confidence: {confidence:.2f}%</p>
-            </div>
-            """, unsafe_allow_html=True)
+    
+# Card
+st.markdown(f"""
+<div class="card">
+<h4>{name}</h4>
+<p>Age: {age} | Gender: {gender}</p>
+<hr>
+<h3>Diagnosis: {result.upper()}</h3>
+<p>Confidence: {confidence:.2f}%</p>
+</div>
+""", unsafe_allow_html=True)
 
             # Progress
             st.progress(int(confidence))
