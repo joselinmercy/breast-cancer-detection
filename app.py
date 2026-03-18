@@ -171,7 +171,7 @@ st.pyplot(fig)
 # PDF
 pdf = generate_pdf(name, age, gender, result, confidence)
 with open(pdf,"rb") as f:
-st.download_button("📄 Download Report", f)
+   st.download_button("📄 Download Report", f)
 
 else:
     st.info("Upload image to begin")           
