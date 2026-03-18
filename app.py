@@ -150,31 +150,31 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  # Progress
-            st.progress(int(confidence))
+ st.progress(int(confidence))
 
-            # Risk
-            st.markdown("### 🚨 Risk Level")
+ # Risk
+st.markdown("### 🚨 Risk Level")
 
-            if result=="malignant":
-                st.error("🔴 HIGH RISK")
-            elif result=="benign":
-                st.warning("🟡 MODERATE RISK")
-            else:
-                st.success("🟢 LOW RISK")
+if result=="malignant":
+         st.error("🔴 HIGH RISK")
+elif result=="benign":
+          st.warning("🟡 MODERATE RISK")
+else:
+    st.success("🟢 LOW RISK")
 
-            # Chart
-            st.markdown("### 📊 Probability")
-            fig, ax = plt.subplots()
-            ax.bar(classes, prediction[0])
-            st.pyplot(fig)
+ # Chart
+ st.markdown("### 📊 Probability")
+ fig, ax = plt.subplots()
+ ax.bar(classes, prediction[0])
+ st.pyplot(fig)
 
-            # PDF
-            pdf = generate_pdf(name, age, gender, result, confidence)
-            with open(pdf,"rb") as f:
-                st.download_button("📄 Download Report", f)
+# PDF
+pdf = generate_pdf(name, age, gender, result, confidence)
+with open(pdf,"rb") as f:
+st.download_button("📄 Download Report", f)
 
-        else:
-            st.info("Upload image to begin")           
+else:
+    st.info("Upload image to begin")           
 
 # ================== PAGE 2 ==================
 elif page=="📊 Reports":
