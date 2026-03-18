@@ -137,9 +137,7 @@ if uploaded_file:
 
     prediction = [random.random() for _ in classes]
     prediction = np.array([prediction])
-        
-
-            # Card
+         # Card
             st.markdown(f"""
             <div class="card">
             <h4>{name}</h4>
