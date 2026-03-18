@@ -133,11 +133,11 @@ if uploaded_file:
     import random
 
     result = random.choice(classes)
-    confidence = random.uniform(80, 99)
+confidence = random.uniform(80, 99)
 
-    prediction = [random.random() for _ in classes]
-    prediction = np.array([prediction])
-    
+prediction = [random.random() for _ in classes]
+prediction = np.array([prediction])
+
 # Card
 st.markdown(f"""
 <div class="card">
@@ -149,19 +149,18 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
- # Progress
- st.progress(int(confidence))
+# Progress
+st.progress(int(confidence))
 
- # Risk
+# Risk
 st.markdown("### 🚨 Risk Level")
 
-if result=="malignant":
-         st.error("🔴 HIGH RISK")
-elif result=="benign":
-          st.warning("🟡 MODERATE RISK")
+if result == "malignant":
+    st.error("🔴 HIGH RISK")
+elif result == "benign":
+    st.warning("🟡 MODERATE RISK")
 else:
     st.success("🟢 LOW RISK")
-
  # Chart
  st.markdown("### 📊 Probability")
  fig, ax = plt.subplots()
