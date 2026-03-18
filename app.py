@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-
 import random
 from PIL import Image
 
@@ -40,21 +39,12 @@ body, .main { background-color: #f5f7fa; }
     color: #0b3d91;
 }
 
-.subtitle {
-    font-size: 18px;
-    color: #333333;
-}
-
 .card {
     background: linear-gradient(145deg, #ffffff, #f0f4f8);
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
     color: #000000;
-}
-
-html, body, [class*="css"]  {
-    color: #000000 !important;
 }
 
 h1, h2, h3 { color: #0b3d91 !important; }
@@ -64,21 +54,6 @@ section[data-testid="stSidebar"] {
 }
 section[data-testid="stSidebar"] * {
     color: #ffffff !important;
-}
-
-/* Upload box */
-[data-testid="stFileUploader"] {
-    background-color: #ffffff !important;
-    border: 2px dashed #0b3d91 !important;
-    border-radius: 12px;
-    padding: 15px;
-}
-[data-testid="stFileUploader"] section {
-    background-color: #eaf1fb !important;
-}
-[data-testid="stFileUploader"] button {
-    background-color: #0b3d91 !important;
-    color: white !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -92,8 +67,7 @@ padding:15px;border-radius:10px;color:white;text-align:center;margin-bottom:20px
 </div>
 """, unsafe_allow_html=True)
 
-# -------------------- LOAD MODEL --------------------
-
+# -------------------- DATA --------------------
 classes = ['benign', 'malignant', 'normal']
 
 # -------------------- SIDEBAR --------------------
@@ -105,7 +79,6 @@ st.sidebar.subheader("👤 Patient Info")
 name = st.sidebar.text_input("Patient Name")
 age = st.sidebar.number_input("Age", 1, 120)
 gender = "Female"
-st.sidebar.text_input("Gender", value="Female", disabled=True)
 
 # ================== PAGE 1 ==================
 if page == "🔍 Diagnosis":
@@ -124,60 +97,60 @@ if page == "🔍 Diagnosis":
     with col2:
         st.markdown("### 🧾 Report")
 
-if uploaded_file:
+        if uploaded_file:
 
-    img_resized = img.resize((224,224))
-    img_array = np.array(img_resized)
-    img_array = np.expand_dims(img_array, axis=0)/255.0
+            # -------- PROCESS --------
+            img_resized = img.resize((224,224))
+            img_array = np.array(img_resized)
+            img_array = np.expand_dims(img_array, axis=0)/255.0
 
-    import random
+            # -------- PREDICTION --------
+            result = random.choice(classes)
+            confidence = random.uniform(80, 99)
 
-    result = random.choice(classes)
-confidence = random.uniform(80, 99)
+            prediction = [random.random() for _ in classes]
+            prediction = np.array([prediction])
 
-prediction = [random.random() for _ in classes]
-prediction = np.array([prediction])
+            # -------- CARD --------
+            st.markdown(f"""
+            <div class="card">
+            <h4>{name}</h4>
+            <p>Age: {age} | Gender: {gender}</p>
+            <hr>
+            <h3>Diagnosis: {result.upper()}</h3>
+            <p>Confidence: {confidence:.2f}%</p>
+            </div>
+            """, unsafe_allow_html=True)
 
-# Card
-st.markdown(f"""
-<div class="card">
-<h4>{name}</h4>
-<p>Age: {age} | Gender: {gender}</p>
-<hr>
-<h3>Diagnosis: {result.upper()}</h3>
-<p>Confidence: {confidence:.2f}%</p>
-</div>
-""", unsafe_allow_html=True)
+            # -------- PROGRESS --------
+            st.progress(int(confidence))
 
-# Progress
-st.progress(int(confidence))
+            # -------- RISK --------
+            st.markdown("### 🚨 Risk Level")
 
-# Risk
-st.markdown("### 🚨 Risk Level")
+            if result == "malignant":
+                st.error("🔴 HIGH RISK")
+            elif result == "benign":
+                st.warning("🟡 MODERATE RISK")
+            else:
+                st.success("🟢 LOW RISK")
 
-if result == "malignant":
-    st.error("🔴 HIGH RISK")
-elif result == "benign":
-    st.warning("🟡 MODERATE RISK")
-else:
-    st.success("🟢 LOW RISK")
-    
-# Chart
-st.markdown("### 📊 Probability")
-fig, ax = plt.subplots()
-ax.bar(classes, prediction[0])
-st.pyplot(fig)
+            # -------- CHART --------
+            st.markdown("### 📊 Probability")
+            fig, ax = plt.subplots()
+            ax.bar(classes, prediction[0])
+            st.pyplot(fig)
 
-# PDF
-pdf = generate_pdf(name, age, gender, result, confidence)
-with open(pdf,"rb") as f:
-   st.download_button("📄 Download Report", f)
+            # -------- PDF --------
+            pdf = generate_pdf(name, age, gender, result, confidence)
+            with open(pdf, "rb") as f:
+                st.download_button("📄 Download Report", f)
 
-else:
-    st.info("Upload image to begin")           
+        else:
+            st.info("Upload image to begin")
 
 # ================== PAGE 2 ==================
-elif page=="📊 Reports":
+elif page == "📊 Reports":
 
     st.markdown("## 📊 Model Performance")
 
@@ -188,7 +161,7 @@ elif page=="📊 Reports":
 
     st.markdown("---")
 
-    col1,col2=st.columns(2)
+    col1,col2 = st.columns(2)
 
     with col1:
         if os.path.exists("accuracy_graph.png"):
