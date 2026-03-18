@@ -3,7 +3,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-from tensorflow.keras.models import load_model
+import random
 from tensorflow.keras.preprocessing import image
 from PIL import Image
 
