@@ -149,7 +149,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-            # Progress
+ # Progress
             st.progress(int(confidence))
 
             # Risk
@@ -174,7 +174,7 @@ st.markdown(f"""
                 st.download_button("📄 Download Report", f)
 
         else:
-            st.info("Upload image to begin")
+            st.info("Upload image to begin")           
 
 # ================== PAGE 2 ==================
 elif page=="📊 Reports":
