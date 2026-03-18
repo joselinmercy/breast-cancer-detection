@@ -161,11 +161,12 @@ elif result == "benign":
     st.warning("🟡 MODERATE RISK")
 else:
     st.success("🟢 LOW RISK")
- # Chart
- st.markdown("### 📊 Probability")
- fig, ax = plt.subplots()
- ax.bar(classes, prediction[0])
- st.pyplot(fig)
+    
+# Chart
+st.markdown("### 📊 Probability")
+fig, ax = plt.subplots()
+ax.bar(classes, prediction[0])
+st.pyplot(fig)
 
 # PDF
 pdf = generate_pdf(name, age, gender, result, confidence)
