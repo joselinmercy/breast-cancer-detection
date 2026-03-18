@@ -4,7 +4,6 @@ import os
 import matplotlib.pyplot as plt
 
 import random
-from tensorflow.keras.preprocessing import image
 from PIL import Image
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph
@@ -128,7 +127,7 @@ if page == "🔍 Diagnosis":
         if uploaded_file:
 
             img_resized = img.resize((224,224))
-            img_array = image.img_to_array(img_resized)
+            img_array = np.array(img_resized)
             img_array = np.expand_dims(img_array, axis=0)/255.0
 
             prediction = model.predict(img_array)
