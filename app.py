@@ -124,19 +124,19 @@ if page == "🔍 Diagnosis":
     with col2:
         st.markdown("### 🧾 Report")
 
-        if uploaded_file:
+if uploaded_file:
 
-            img_resized = img.resize((224,224))
-            img_array = np.array(img_resized)
-            img_array = np.expand_dims(img_array, axis=0)/255.0
-            
-            import random
+    img_resized = img.resize((224,224))
+    img_array = np.array(img_resized)
+    img_array = np.expand_dims(img_array, axis=0)/255.0
 
-            result = random.choice(classes)
-            confidence = random.uniform(80, 99)
+    import random
 
-           prediction = [random.random() for _ in classes]
-           prediction = np.array([prediction])
+    result = random.choice(classes)
+    confidence = random.uniform(80, 99)
+
+    prediction = [random.random() for _ in classes]
+    prediction = np.array([prediction])
         
 
             # Card
