@@ -36,7 +36,7 @@ body, .main { background-color: #f5f7fa; }
 .title {
     font-size: 32px;
     font-weight: bold;
-    color: #0b3d91;
+    color: #333333;
 }
 
 .card {
