@@ -4,22 +4,38 @@ import os
 import matplotlib.pyplot as plt
 import random
 from PIL import Image
+import uuid
+from datetime import datetime
+import pandas as pd
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 
+# -------------------- SAVE CSV --------------------
+def save_to_csv(data):
+    file = "patient_history.csv"
+    df = pd.DataFrame([data])
+
+    if os.path.exists(file):
+        df.to_csv(file, mode='a', header=False, index=False)
+    else:
+        df.to_csv(file, index=False)
+
 # -------------------- PDF FUNCTION --------------------
-def generate_pdf(name, age, gender, contact, result, confidence):
+def generate_pdf(name, age, gender, contact, email, address, report_id, result, confidence):
     file_path = "report.pdf"
     doc = SimpleDocTemplate(file_path)
     styles = getSampleStyleSheet()
 
     content = []
     content.append(Paragraph("Breast Cancer Diagnosis Report", styles['Title']))
+    content.append(Paragraph(f"Report ID: {report_id}", styles['Normal']))
     content.append(Paragraph(f"Patient Name: {name}", styles['Normal']))
     content.append(Paragraph(f"Age: {age}", styles['Normal']))
     content.append(Paragraph(f"Gender: {gender}", styles['Normal']))
     content.append(Paragraph(f"Contact: {contact}", styles['Normal']))
+    content.append(Paragraph(f"Email: {email}", styles['Normal']))
+    content.append(Paragraph(f"Address: {address}", styles['Normal']))
     content.append(Paragraph(f"Diagnosis: {result}", styles['Normal']))
     content.append(Paragraph(f"Confidence: {confidence:.2f}%", styles['Normal']))
 
@@ -81,6 +97,7 @@ page = st.sidebar.radio("Navigation", ["🔍 Diagnosis", "📊 Reports"])
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("👤 Patient Info")
+
 name = st.sidebar.text_input("Patient Name")
 age = st.sidebar.number_input("Age", 1, 120)
 contact = st.sidebar.text_input("📞 Contact Number")
@@ -89,6 +106,10 @@ if contact and not contact.isdigit():
     st.sidebar.error("Enter numbers only")
 elif contact and len(contact) != 10:
     st.sidebar.warning("Enter 10-digit number")
+
+email = st.sidebar.text_input("📧 Email")
+address = st.sidebar.text_area("🏠 Address")
+
 gender = "Female"
 
 # ================== PAGE 1 ==================
@@ -122,6 +143,22 @@ if page == "🔍 Diagnosis":
             prediction = [random.random() for _ in classes]
             prediction = np.array([prediction])
 
+            # -------- REPORT ID --------
+            report_id = "RID-" + datetime.now().strftime("%Y%m%d%H%M%S")
+
+            # -------- SAVE HISTORY --------
+            save_to_csv({
+                "Report ID": report_id,
+                "Name": name,
+                "Age": age,
+                "Gender": gender,
+                "Contact": contact,
+                "Email": email,
+                "Address": address,
+                "Result": result,
+                "Confidence": confidence
+            })
+
             # -------- COLOR LOGIC --------
             if result == "malignant":
                 color = "#ff4b4b"
@@ -140,8 +177,11 @@ if page == "🔍 Diagnosis":
             st.markdown(f"""
             <div class="card">
             <h4>{name}</h4>
-           <p>Age: {age} | Gender: {gender}</p>
-           <p>📞 Contact: {contact}</p>
+            <p>Age: {age} | Gender: {gender}</p>
+            <p>📞 {contact}</p>
+            <p>📧 {email}</p>
+            <p>🏠 {address}</p>
+            <p>🆔 {report_id}</p>
             <hr>
             <h3 style="color:{color};">Diagnosis: {result.upper()}</h3>
             <p>Confidence: {confidence:.2f}%</p>
@@ -165,23 +205,11 @@ if page == "🔍 Diagnosis":
             st.markdown("### 🔬 Pattern Analysis")
 
             if result == "malignant":
-                st.error("""
-🔴 Irregular pattern detected  
-- Uneven tissue  
-- Spiky edges  
-👉 Possible cancer
-""")
+                st.error("🔴 Irregular pattern detected")
             elif result == "benign":
-                st.warning("""
-🟡 Smooth pattern  
-- Round shape  
-👉 Non-cancerous
-""")
+                st.warning("🟡 Smooth pattern")
             else:
-                st.success("""
-🟢 Normal tissue  
-👉 No tumor
-""")
+                st.success("🟢 Normal tissue")
 
             # -------- CHART --------
             st.markdown("### 📊 Probability")
@@ -190,7 +218,7 @@ if page == "🔍 Diagnosis":
             st.pyplot(fig)
 
             # -------- PDF --------
-            pdf = generate_pdf(name, age, gender, contact, result, confidence)
+            pdf = generate_pdf(name, age, gender, contact, email, address, report_id, result, confidence)
             with open(pdf, "rb") as f:
                 st.download_button(
                     label="📄 Download Report",
@@ -211,35 +239,16 @@ elif page == "📊 Reports":
     c1.metric("Accuracy","86.5%","↑")
     c2.metric("Precision","84.2%","↑")
     c3.metric("Recall","82.7%","↑")
-    st.markdown("---")
-
-    col1,col2=st.columns(2)
-
-    with col1:
-        if os.path.exists("accuracy_graph.png"):
-            st.image("accuracy_graph.png")
-
-    with col2:
-        if os.path.exists("confusion_matrix.png"):
-            st.image("confusion_matrix.png")
 
     st.markdown("---")
 
-    st.markdown("### 🧠 Model Summary")
-    st.markdown("""
-- CNN model  
-- Ultrasound dataset  
-- 3 classes  
-- Early detection support  
-""")
+    st.markdown("### 📁 Patient History")
 
-    st.markdown("### 📌 Interpretation")
-    st.success("""
-- Reliable predictions  
-- Good classification performance  
-- Helps doctors  
-""")
-
+    if os.path.exists("patient_history.csv"):
+        df = pd.read_csv("patient_history.csv")
+        st.dataframe(df)
+    else:
+        st.info("No records yet")
 
 # -------------------- FOOTER --------------------
 st.markdown("---")
