@@ -269,16 +269,6 @@ elif page == "📊 Reports":
 """)
 
 
-    st.markdown("---")
-
-    st.markdown("### 📁 Patient History")
-
-    if os.path.exists("patient_history.csv"):
-        df = pd.read_csv("patient_history.csv")
-        st.dataframe(df)
-    else:
-        st.info("No records yet")
-
 # -------------------- FOOTER --------------------
 st.markdown("---")
 st.markdown("<center style='color:white;'>🏥 Clinical AI System | 2026</center>", unsafe_allow_html=True)
