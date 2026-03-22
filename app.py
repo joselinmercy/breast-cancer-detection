@@ -82,6 +82,7 @@ st.sidebar.markdown("---")
 st.sidebar.subheader("👤 Patient Info")
 name = st.sidebar.text_input("Patient Name")
 age = st.sidebar.number_input("Age", 1, 120)
+contact = st.sidebar.number_input("Number",1,10)
 gender = "Female"
 
 # ================== PAGE 1 ==================
