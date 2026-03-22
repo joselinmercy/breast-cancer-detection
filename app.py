@@ -31,23 +31,23 @@ st.set_page_config(page_title="AI Breast Cancer Detection", layout="wide")
 # -------------------- CSS --------------------
 st.markdown("""
 <style>
-body, .main { background-color: #f5f7fa; }
+body, .main { background-color: #0e1117; color: white; }
 
 .title {
     font-size: 32px;
     font-weight: bold;
-    color: #333333;
+    color: #ffffff;
 }
 
 .card {
-    background: linear-gradient(145deg, #ffffff, #f0f4f8);
+    background: linear-gradient(145deg, #1c2533, #111827);
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
-    color: #000000;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
+    color: #ffffff;
 }
 
-h1, h2, h3 { color: #0b3d91 !important; }
+h1, h2, h3 { color: #ffffff !important; }
 
 section[data-testid="stSidebar"] {
     background-color: #1e2a38;
@@ -61,13 +61,19 @@ section[data-testid="stSidebar"] * {
 # -------------------- HEADER --------------------
 st.markdown("""
 <div style="background: linear-gradient(90deg,#0b3d91,#0056b3);
-padding:15px;border-radius:10px;text-align:center;margin-bottom:20px;">
-<h2 style="color:white; font-weight:bold;">
+padding:20px;border-radius:12px;text-align:center;margin-bottom:20px;">
+
+<h2 style="color:white; font-weight:700; font-size:28px;">
 🏥 AI Breast Cancer Diagnosis System
 </h2>
-<p style="color:#e0e0e0;">Clinical Decision Support Tool</p>
+
+<p style="color:#d6e6ff;">
+Clinical Decision Support Tool
+</p>
+
 </div>
 """, unsafe_allow_html=True)
+
 # -------------------- DATA --------------------
 classes = ['benign', 'malignant', 'normal']
 
@@ -112,13 +118,27 @@ if page == "🔍 Diagnosis":
             prediction = [random.random() for _ in classes]
             prediction = np.array([prediction])
 
+            # -------- COLOR LOGIC --------
+            if result == "malignant":
+                color = "#ff4b4b"
+                risk_text = "🔴 HIGH RISK"
+                bg = "#2b0f0f"
+            elif result == "benign":
+                color = "#f1c40f"
+                risk_text = "🟡 MODERATE RISK"
+                bg = "#2b2605"
+            else:
+                color = "#2ecc71"
+                risk_text = "🟢 LOW RISK"
+                bg = "#0f2b1b"
+
             # -------- CARD --------
             st.markdown(f"""
             <div class="card">
             <h4>{name}</h4>
             <p>Age: {age} | Gender: {gender}</p>
             <hr>
-            <h3>Diagnosis: {result.upper()}</h3>
+            <h3 style="color:{color};">Diagnosis: {result.upper()}</h3>
             <p>Confidence: {confidence:.2f}%</p>
             </div>
             """, unsafe_allow_html=True)
@@ -126,15 +146,21 @@ if page == "🔍 Diagnosis":
             # -------- PROGRESS --------
             st.progress(int(confidence))
 
-            # -------- RISK --------
+            # -------- RISK LEVEL --------
             st.markdown("### 🚨 Risk Level")
 
-            if result == "malignant":
-                st.error("🔴 HIGH RISK")
-            elif result == "benign":
-                st.warning("🟡 MODERATE RISK")
-            else:
-                st.success("🟢 LOW RISK")
+            st.markdown(f"""
+            <div style="
+            padding:12px;
+            border-radius:10px;
+            background:{bg};
+            color:{color};
+            font-weight:bold;
+            font-size:18px;
+            text-align:center;">
+            {risk_text}
+            </div>
+            """, unsafe_allow_html=True)
 
             # -------- CHART --------
             st.markdown("### 📊 Probability")
@@ -145,12 +171,12 @@ if page == "🔍 Diagnosis":
             # -------- PDF --------
             pdf = generate_pdf(name, age, gender, result, confidence)
             with open(pdf, "rb") as f:
-               st.download_button(
-        label="📄 Download Report",
-        data=f,
-        file_name="Breast_Cancer_Report.pdf",
-        mime="application/pdf"
-    )
+                st.download_button(
+                    label="📄 Download Report",
+                    data=f,
+                    file_name="Breast_Cancer_Report.pdf",
+                    mime="application/pdf"
+                )
 
         else:
             st.info("Upload image to begin")
@@ -196,4 +222,4 @@ elif page == "📊 Reports":
 
 # -------------------- FOOTER --------------------
 st.markdown("---")
-st.markdown("<center>🏥 Clinical AI System | 2026</center>", unsafe_allow_html=True)
+st.markdown("<center style='color:white;'>🏥 Clinical AI System | 2026</center>", unsafe_allow_html=True)
