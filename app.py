@@ -203,6 +203,35 @@ elif page == "📊 Reports":
     c1.metric("Accuracy","86.5%","↑")
     c2.metric("Precision","84.2%","↑")
     c3.metric("Recall","82.7%","↑")
+    st.markdown("---")
+
+    col1,col2=st.columns(2)
+
+    with col1:
+        if os.path.exists("accuracy_graph.png"):
+            st.image("accuracy_graph.png")
+
+    with col2:
+        if os.path.exists("confusion_matrix.png"):
+            st.image("confusion_matrix.png")
+
+    st.markdown("---")
+
+    st.markdown("### 🧠 Model Summary")
+    st.markdown("""
+- CNN model  
+- Ultrasound dataset  
+- 3 classes  
+- Early detection support  
+""")
+
+    st.markdown("### 📌 Interpretation")
+    st.success("""
+- Reliable predictions  
+- Good classification performance  
+- Helps doctors  
+""")
+
 
 # -------------------- FOOTER --------------------
 st.markdown("---")
