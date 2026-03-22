@@ -241,14 +241,32 @@ elif page == "📊 Reports":
     c3.metric("Recall","82.7%","↑")
 
     st.markdown("---")
+       col1,col2=st.columns(2)
 
-    st.markdown("### 📁 Patient History")
+    with col1:
+        if os.path.exists("accuracy_graph.png"):
+            st.image("accuracy_graph.png")
 
-    if os.path.exists("patient_history.csv"):
-        df = pd.read_csv("patient_history.csv")
-        st.dataframe(df)
-    else:
-        st.info("No records yet")
+    with col2:
+        if os.path.exists("confusion_matrix.png"):
+            st.image("confusion_matrix.png")
+
+    st.markdown("---")
+
+    st.markdown("### 🧠 Model Summary")
+    st.markdown("""
+- CNN model  
+- Ultrasound dataset  
+- 3 classes  
+- Early detection support  
+""")
+
+    st.markdown("### 📌 Interpretation")
+    st.success("""
+- Reliable predictions  
+- Good classification performance  
+- Helps doctors  
+""")
 
 # -------------------- FOOTER --------------------
 st.markdown("---")
