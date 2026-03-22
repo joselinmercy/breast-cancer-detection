@@ -154,13 +154,13 @@ if page == "🔍 Diagnosis":
 
         pdf = generate_pdf(name, age, gender, contact, email, address, report_id, result, confidence)
 
-       with open(pdf, "rb") as f:
+        with open(pdf, "rb") as f:
            st.download_button(
-        label="📄 Download Report",
-        data=f,
-        file_name="Breast_Cancer_Report.pdf",
-        mime="application/pdf"
-    )
+                label="📄 Download Report",
+                data=f,
+                file_name="Breast_Cancer_Report.pdf",
+                mime="application/pdf"
+         )
 
 # ================== PAGE 2 ==================
 elif page == "📊 Reports":
