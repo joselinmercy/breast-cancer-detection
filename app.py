@@ -191,12 +191,12 @@ else:
 👉 No tumor detected
 """)
  # -------- CHART --------
-            st.markdown("### 📊 Probability")
-            fig, ax = plt.subplots()
-            ax.bar(classes, prediction[0])
-            st.pyplot(fig)
+ st.markdown("### 📊 Probability")
+ fig, ax = plt.subplots()
+ ax.bar(classes, prediction[0])
+ st.pyplot(fig)
 
-            # -------- PDF --------
+ # -------- PDF --------
             pdf = generate_pdf(name, age, gender, result, confidence)
             with open(pdf, "rb") as f:
                 st.download_button(
