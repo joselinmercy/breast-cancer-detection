@@ -190,8 +190,7 @@ else:
 - Healthy appearance  
 👉 No tumor detected
 """)
-
-            # -------- CHART --------
+ # -------- CHART --------
             st.markdown("### 📊 Probability")
             fig, ax = plt.subplots()
             ax.bar(classes, prediction[0])
