@@ -62,15 +62,12 @@ section[data-testid="stSidebar"] * {
 st.markdown("""
 <div style="background: linear-gradient(90deg,#0b3d91,#0056b3);
 padding:20px;border-radius:12px;text-align:center;margin-bottom:20px;">
-
 <h2 style="color:white; font-weight:700; font-size:28px;">
 🏥 AI Breast Cancer Diagnosis System
 </h2>
-
 <p style="color:#d6e6ff;">
 Clinical Decision Support Tool
 </p>
-
 </div>
 """, unsafe_allow_html=True)
 
@@ -146,57 +143,45 @@ if page == "🔍 Diagnosis":
             # -------- PROGRESS --------
             st.progress(int(confidence))
 
-            # -------- RISK LEVEL --------
+            # -------- RISK --------
             st.markdown("### 🚨 Risk Level")
-
             st.markdown(f"""
-            <div style="
-            padding:12px;
-            border-radius:10px;
-            background:{bg};
-            color:{color};
-            font-weight:bold;
-            font-size:18px;
-            text-align:center;">
+            <div style="padding:12px;border-radius:10px;
+            background:{bg};color:{color};
+            font-weight:bold;font-size:18px;text-align:center;">
             {risk_text}
             </div>
             """, unsafe_allow_html=True)
-            # ---------------- PATTERN ANALYSIS ----------------
-st.markdown("### 🔬 Pattern Analysis")
 
-if result == "malignant":
-    st.error("""
-🔴 **Irregular Pattern Detected**
-- Uneven tissue structure  
-- Spiky or distorted edges  
-- Dense abnormal regions  
-👉 Suggests possible cancerous tumor
+            # -------- PATTERN ANALYSIS --------
+            st.markdown("### 🔬 Pattern Analysis")
+
+            if result == "malignant":
+                st.error("""
+🔴 Irregular pattern detected  
+- Uneven tissue  
+- Spiky edges  
+👉 Possible cancer
+""")
+            elif result == "benign":
+                st.warning("""
+🟡 Smooth pattern  
+- Round shape  
+👉 Non-cancerous
+""")
+            else:
+                st.success("""
+🟢 Normal tissue  
+👉 No tumor
 """)
 
-elif result == "benign":
-    st.warning("""
-🟡 **Smooth & Defined Pattern**
-- Round or oval shape  
-- Clear boundaries  
-- Uniform texture  
-👉 Likely non-cancerous tumor
-""")
+            # -------- CHART --------
+            st.markdown("### 📊 Probability")
+            fig, ax = plt.subplots()
+            ax.bar(classes, prediction[0])
+            st.pyplot(fig)
 
-else:
-    st.success("""
-🟢 **Normal Tissue Pattern**
-- No abnormal structures  
-- Balanced texture  
-- Healthy appearance  
-👉 No tumor detected
-""")
- # -------- CHART --------
- st.markdown("### 📊 Probability")
- fig, ax = plt.subplots()
- ax.bar(classes, prediction[0])
- st.pyplot(fig)
-
- # -------- PDF --------
+            # -------- PDF --------
             pdf = generate_pdf(name, age, gender, result, confidence)
             with open(pdf, "rb") as f:
                 st.download_button(
@@ -218,35 +203,6 @@ elif page == "📊 Reports":
     c1.metric("Accuracy","86.5%","↑")
     c2.metric("Precision","84.2%","↑")
     c3.metric("Recall","82.7%","↑")
-
-    st.markdown("---")
-
-    col1,col2 = st.columns(2)
-
-    with col1:
-        if os.path.exists("accuracy_graph.png"):
-            st.image("accuracy_graph.png")
-
-    with col2:
-        if os.path.exists("confusion_matrix.png"):
-            st.image("confusion_matrix.png")
-
-    st.markdown("---")
-
-    st.markdown("### 🧠 Model Summary")
-    st.markdown("""
-- CNN model  
-- Ultrasound dataset  
-- 3 classes  
-- Early detection support  
-""")
-
-    st.markdown("### 📌 Interpretation")
-    st.success("""
-- Reliable predictions  
-- Good classification performance  
-- Helps doctors  
-""")
 
 # -------------------- FOOTER --------------------
 st.markdown("---")
