@@ -144,7 +144,12 @@ if page == "🔍 Diagnosis":
             # -------- PDF --------
             pdf = generate_pdf(name, age, gender, result, confidence)
             with open(pdf, "rb") as f:
-                st.download_button("📄 Download Report", f)
+               st.download_button(
+        label="📄 Download Report",
+        data=f,
+        file_name="Breast_Cancer_Report.pdf",
+        mime="application/pdf"
+    )
 
         else:
             st.info("Upload image to begin")
