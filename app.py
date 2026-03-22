@@ -82,7 +82,12 @@ st.sidebar.markdown("---")
 st.sidebar.subheader("👤 Patient Info")
 name = st.sidebar.text_input("Patient Name")
 age = st.sidebar.number_input("Age", 1, 120)
-contact = st.sidebar.number_input("Number",1,10)
+contact = st.sidebar.text_input("📞 Contact Number")
+
+if contact and not contact.isdigit():
+    st.sidebar.error("Enter numbers only")
+elif contact and len(contact) != 10:
+    st.sidebar.warning("Enter 10-digit number")
 gender = "Female"
 
 # ================== PAGE 1 ==================
@@ -134,7 +139,8 @@ if page == "🔍 Diagnosis":
             st.markdown(f"""
             <div class="card">
             <h4>{name}</h4>
-            <p>Age: {age} | Gender: {gender}</p>
+           <p>Age: {age} | Gender: {gender}</p>
+           <p>📞 Contact: {contact}</p>
             <hr>
             <h3 style="color:{color};">Diagnosis: {result.upper()}</h3>
             <p>Confidence: {confidence:.2f}%</p>
@@ -183,7 +189,7 @@ if page == "🔍 Diagnosis":
             st.pyplot(fig)
 
             # -------- PDF --------
-            pdf = generate_pdf(name, age, gender, result, confidence)
+            pdf = generate_pdf(name, age, gender, contact, result, confidence)
             with open(pdf, "rb") as f:
                 st.download_button(
                     label="📄 Download Report",
