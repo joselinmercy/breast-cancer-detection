@@ -9,7 +9,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 
 # -------------------- PDF FUNCTION --------------------
-def generate_pdf(name, age, gender, result, confidence):
+def generate_pdf(name, age, gender, contact, result, confidence):
     file_path = "report.pdf"
     doc = SimpleDocTemplate(file_path)
     styles = getSampleStyleSheet()
@@ -19,6 +19,7 @@ def generate_pdf(name, age, gender, result, confidence):
     content.append(Paragraph(f"Patient Name: {name}", styles['Normal']))
     content.append(Paragraph(f"Age: {age}", styles['Normal']))
     content.append(Paragraph(f"Gender: {gender}", styles['Normal']))
+    content.append(Paragraph(f"Contact: {contact}", styles['Normal']))
     content.append(Paragraph(f"Diagnosis: {result}", styles['Normal']))
     content.append(Paragraph(f"Confidence: {confidence:.2f}%", styles['Normal']))
 
