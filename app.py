@@ -161,6 +161,35 @@ if page == "🔍 Diagnosis":
             {risk_text}
             </div>
             """, unsafe_allow_html=True)
+            # ---------------- PATTERN ANALYSIS ----------------
+st.markdown("### 🔬 Pattern Analysis")
+
+if result == "malignant":
+    st.error("""
+🔴 **Irregular Pattern Detected**
+- Uneven tissue structure  
+- Spiky or distorted edges  
+- Dense abnormal regions  
+👉 Suggests possible cancerous tumor
+""")
+
+elif result == "benign":
+    st.warning("""
+🟡 **Smooth & Defined Pattern**
+- Round or oval shape  
+- Clear boundaries  
+- Uniform texture  
+👉 Likely non-cancerous tumor
+""")
+
+else:
+    st.success("""
+🟢 **Normal Tissue Pattern**
+- No abnormal structures  
+- Balanced texture  
+- Healthy appearance  
+👉 No tumor detected
+""")
 
             # -------- CHART --------
             st.markdown("### 📊 Probability")
