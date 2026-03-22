@@ -62,7 +62,7 @@ section[data-testid="stSidebar"] * {
 st.markdown("""
 <div style="background: linear-gradient(90deg,#0b3d91,#0056b3);
 padding:15px;border-radius:10px;text-align:center;margin-bottom:20px;">
-<h2 style="color:#ffd700;">🏥 AI Breast Cancer Diagnosis System</h2>
+<h2 style="color:#ffffff;">🏥 AI Breast Cancer Diagnosis System</h2>
 <p style="color:white;">Clinical Decision Support Tool</p>
 </div>
 """, unsafe_allow_html=True)
