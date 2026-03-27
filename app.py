@@ -82,20 +82,22 @@ if page == "🔍 Diagnosis":
     with col2:
         st.markdown("### 🧾 Report")
 
-        if uploaded_file:
+       if uploaded_file:
 
-            if "prediction_done" not in st.session_state:
+    # 🔥 RESET WHEN NEW IMAGE
+    if "last_file" not in st.session_state or st.session_state.last_file != uploaded_file.name:
+        st.session_state.clear()
+        st.session_state.last_file = uploaded_file.name
 
-                result = random.choice(classes)
-                confidence = random.uniform(80, 99)
-                prediction = np.random.rand(3)
-                report_id = "RID-" + datetime.now().strftime("%Y%m%d%H%M%S")
+    if "prediction_done" not in st.session_state:
+        result = random.choice(classes)
+        confidence = random.uniform(80, 99)
+        prediction = np.random.rand(3)
 
-                st.session_state.prediction_done = True
-                st.session_state.result = result
-                st.session_state.confidence = confidence
-                st.session_state.prediction = prediction
-                st.session_state.report_id = report_id
+        st.session_state.prediction_done = True
+        st.session_state.result = result
+        st.session_state.confidence = confidence
+        st.session_state.prediction = prediction
 
                 save_to_csv({
                     "Report ID": report_id,
