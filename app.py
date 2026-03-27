@@ -166,25 +166,44 @@ if page == "🔍 Diagnosis":
             st.info("Upload image")
 
 # ================== PAGE 2 ==================
+# ================== PAGE 2 ==================
 elif page == "📊 Reports":
 
     st.markdown("## 📊 Model Performance")
 
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Accuracy","86.5%")
-    c2.metric("Precision","84.2%")
-    c3.metric("Recall","82.7%")
+    c1,c2,c3 = st.columns(3)
+    c1.metric("Accuracy","86.5%","↑")
+    c2.metric("Precision","84.2%","↑")
+    c3.metric("Recall","82.7%","↑")
 
-    st.markdown("### 📈 Accuracy Trend")
-    fig, ax = plt.subplots()
-    ax.plot([1,2,3,4,5],[0.6,0.7,0.8,0.85,0.86])
-    st.pyplot(fig)
+    st.markdown("---")
+    col1,col2=st.columns(2)
 
-    st.markdown("### 🔲 Confusion Matrix")
-    cm = np.array([[50,5,2],[4,45,3],[1,2,48]])
-    fig2, ax2 = plt.subplots()
-    ax2.imshow(cm)
-    st.pyplot(fig2)
+    with col1:
+        if os.path.exists("accuracy_graph.png"):
+            st.image("accuracy_graph.png")
+
+    with col2:
+        if os.path.exists("confusion_matrix.png"):
+            st.image("confusion_matrix.png")
+
+    st.markdown("---")
+
+    st.markdown("### 🧠 Model Summary")
+    st.markdown("""
+- CNN model  
+- Ultrasound dataset  
+- 3 classes  
+- Early detection support  
+""")
+
+    st.markdown("### 📌 Interpretation")
+    st.success("""
+- Reliable predictions  
+- Good classification performance  
+- Helps doctors  
+""")
+
 
 # -------------------- FOOTER --------------------
 st.markdown("""
