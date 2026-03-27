@@ -44,6 +44,49 @@ def generate_pdf(name, age, gender, contact, email, address, report_id, result, 
 # -------------------- CONFIG --------------------
 st.set_page_config(page_title="AI Breast Cancer Detection", layout="wide")
 
+# -------------------- CSS --------------------
+st.markdown("""
+<style>
+body, .main { background-color: #0e1117; color: white; }
+
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.card {
+    background: linear-gradient(145deg, #1c2533, #111827);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
+    color: #ffffff;
+}
+
+h1, h2, h3 { color: #ffffff !important; }
+
+section[data-testid="stSidebar"] {
+    background-color: #1e2a38;
+}
+section[data-testid="stSidebar"] * {
+    color: #ffffff !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# -------------------- HEADER --------------------
+st.markdown("""
+<div style="background: linear-gradient(90deg,#0b3d91,#0056b3);
+padding:20px;border-radius:12px;text-align:center;margin-bottom:20px;">
+<h2 style="color:white; font-weight:700; font-size:28px;">
+🏥 AI Breast Cancer Diagnosis System
+</h2>
+<p style="color:#d6e6ff;">
+Clinical Decision Support Tool
+</p>
+</div>
+""", unsafe_allow_html=True)
+
 # -------------------- DATA --------------------
 classes = ['benign', 'malignant', 'normal']
 
