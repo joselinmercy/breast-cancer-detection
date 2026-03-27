@@ -194,12 +194,47 @@ if page == "🔍 Diagnosis":
             st.progress(int(confidence))
 
             # -------- PATTERN --------
-            if result == "malignant":
-                st.error("🔴 Irregular pattern detected")
-            elif result == "benign":
-                st.warning("🟡 Smooth pattern")
-            else:
-                st.success("🟢 Normal tissue")
+             st.markdown("### 🔬 Pattern Analysis")
+if result == "malignant":
+    st.error("🔴 Irregular pattern detected")
+    
+    st.markdown("""
+    **Analysis Details:**
+    - Non-uniform tissue structure observed  
+    - Presence of sharp or spiculated edges  
+    - Possible abnormal cell growth  
+    - High likelihood of malignancy  
+
+    **Medical Insight:**  
+    Malignant tumors often appear irregular in shape and may invade surrounding tissues.
+    """)
+
+elif result == "benign":
+    st.warning("🟡 Smooth pattern detected")
+    
+    st.markdown("""
+    **Analysis Details:**
+    - Smooth and well-defined boundaries  
+    - Uniform internal texture  
+    - No invasive characteristics  
+    - Low probability of cancer  
+
+    **Medical Insight:**  
+    Benign tumors are usually non-cancerous and grow slowly without spreading.
+    """)
+
+else:
+    st.success("🟢 Normal tissue detected")
+    
+    st.markdown("""
+    **Analysis Details:**
+    - No visible abnormal structures  
+    - Homogeneous tissue pattern  
+    - No suspicious regions detected  
+
+    **Medical Insight:**  
+    The tissue appears normal with no signs of tumor presence.
+    """)
 
             # -------- CHART --------
             fig, ax = plt.subplots()
