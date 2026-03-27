@@ -82,22 +82,25 @@ if page == "🔍 Diagnosis":
     with col2:
         st.markdown("### 🧾 Report")
 
-    if uploaded_file:
+        if uploaded_file:
 
-    # 🔥 RESET WHEN NEW IMAGE
-    if "last_file" not in st.session_state or st.session_state.last_file != uploaded_file.name:
-        st.session_state.clear()
-        st.session_state.last_file = uploaded_file.name
+            # 🔥 RESET WHEN NEW IMAGE
+            if "last_file" not in st.session_state or st.session_state.last_file != uploaded_file.name:
+                st.session_state.clear()
+                st.session_state.last_file = uploaded_file.name
 
-    if "prediction_done" not in st.session_state:
-        result = random.choice(classes)
-        confidence = random.uniform(80, 99)
-        prediction = np.random.rand(3)
+            # 🔥 RUN ONCE
+            if "prediction_done" not in st.session_state:
+                result = random.choice(classes)
+                confidence = random.uniform(80, 99)
+                prediction = np.random.rand(3)
+                report_id = "RID-" + datetime.now().strftime("%Y%m%d%H%M%S")
 
-        st.session_state.prediction_done = True
-        st.session_state.result = result
-        st.session_state.confidence = confidence
-        st.session_state.prediction = prediction
+                st.session_state.prediction_done = True
+                st.session_state.result = result
+                st.session_state.confidence = confidence
+                st.session_state.prediction = prediction
+                st.session_state.report_id = report_id
 
                 save_to_csv({
                     "Report ID": report_id,
@@ -111,12 +114,13 @@ if page == "🔍 Diagnosis":
                     "Confidence": confidence
                 })
 
+            # 👉 USE STORED VALUES
             result = st.session_state.result
             confidence = st.session_state.confidence
             prediction = st.session_state.prediction
             report_id = st.session_state.report_id
 
-            # -------- RESULT CARD --------
+            # -------- RESULT --------
             st.markdown(f"""
             <div style="background:#111827;padding:20px;border-radius:10px;">
             <h3>Diagnosis: {result.upper()}</h3>
@@ -132,26 +136,15 @@ if page == "🔍 Diagnosis":
 
             if result == "malignant":
                 st.error("🔴 Irregular pattern detected")
-                st.markdown("""
-                - Non-uniform structure  
-                - Sharp edges  
-                - High malignancy risk  
-                """)
+                st.markdown("- Non-uniform structure\n- Sharp edges\n- High risk")
 
             elif result == "benign":
                 st.warning("🟡 Smooth pattern detected")
-                st.markdown("""
-                - Smooth boundaries  
-                - Uniform texture  
-                - Low cancer risk  
-                """)
+                st.markdown("- Smooth boundaries\n- Uniform texture\n- Low risk")
 
             else:
                 st.success("🟢 Normal tissue detected")
-                st.markdown("""
-                - No abnormality  
-                - Healthy tissue  
-                """)
+                st.markdown("- No abnormality\n- Healthy tissue")
 
             # -------- CHART --------
             st.markdown("### 📊 Probability")
@@ -168,44 +161,14 @@ if page == "🔍 Diagnosis":
             st.info("Upload image")
 
 # ================== PAGE 2 ==================
-# ================== PAGE 2 ==================
 elif page == "📊 Reports":
 
     st.markdown("## 📊 Model Performance")
 
     c1,c2,c3 = st.columns(3)
-    c1.metric("Accuracy","86.5%","↑")
-    c2.metric("Precision","84.2%","↑")
-    c3.metric("Recall","82.7%","↑")
-
-    st.markdown("---")
-    col1,col2=st.columns(2)
-
-    with col1:
-        if os.path.exists("accuracy_graph.png"):
-            st.image("accuracy_graph.png")
-
-    with col2:
-        if os.path.exists("confusion_matrix.png"):
-            st.image("confusion_matrix.png")
-
-    st.markdown("---")
-
-    st.markdown("### 🧠 Model Summary")
-    st.markdown("""
-- CNN model  
-- Ultrasound dataset  
-- 3 classes  
-- Early detection support  
-""")
-
-    st.markdown("### 📌 Interpretation")
-    st.success("""
-- Reliable predictions  
-- Good classification performance  
-- Helps doctors  
-""")
-
+    c1.metric("Accuracy","86.5%")
+    c2.metric("Precision","84.2%")
+    c3.metric("Recall","82.7%")
 
 # -------------------- FOOTER --------------------
 st.markdown("""
