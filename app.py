@@ -82,7 +82,7 @@ if page == "🔍 Diagnosis":
     with col2:
         st.markdown("### 🧾 Report")
 
-       if uploaded_file:
+    if uploaded_file:
 
     # 🔥 RESET WHEN NEW IMAGE
     if "last_file" not in st.session_state or st.session_state.last_file != uploaded_file.name:
