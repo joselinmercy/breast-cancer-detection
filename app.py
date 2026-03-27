@@ -262,5 +262,6 @@ elif page == "📊 Reports":
 """)
 
 # -------------------- FOOTER --------------------
-st.markdown("---")
-st.markdown("<center style='color:white;'>🏥 Clinical AI System | 
+st.markdown("""
+<center style='color:white;'>🏥 Clinical AI System | 2026</center>
+""", unsafe_allow_html=True)
