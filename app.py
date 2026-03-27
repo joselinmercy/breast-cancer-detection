@@ -194,10 +194,12 @@ if page == "🔍 Diagnosis":
             st.progress(int(confidence))
 
             # -------- PATTERN --------
-             st.markdown("### 🔬 Pattern Analysis")
+           # -------- PATTERN --------
+st.markdown("### 🔬 Pattern Analysis")
+
 if result == "malignant":
     st.error("🔴 Irregular pattern detected")
-    
+
     st.markdown("""
     **Analysis Details:**
     - Non-uniform tissue structure observed  
@@ -211,7 +213,7 @@ if result == "malignant":
 
 elif result == "benign":
     st.warning("🟡 Smooth pattern detected")
-    
+
     st.markdown("""
     **Analysis Details:**
     - Smooth and well-defined boundaries  
@@ -225,7 +227,7 @@ elif result == "benign":
 
 else:
     st.success("🟢 Normal tissue detected")
-    
+
     st.markdown("""
     **Analysis Details:**
     - No visible abnormal structures  
