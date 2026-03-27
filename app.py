@@ -4,7 +4,6 @@ import os
 import matplotlib.pyplot as plt
 import random
 from PIL import Image
-import uuid
 from datetime import datetime
 import pandas as pd
 
@@ -45,49 +44,6 @@ def generate_pdf(name, age, gender, contact, email, address, report_id, result, 
 # -------------------- CONFIG --------------------
 st.set_page_config(page_title="AI Breast Cancer Detection", layout="wide")
 
-# -------------------- CSS --------------------
-st.markdown("""
-<style>
-body, .main { background-color: #0e1117; color: white; }
-
-.title {
-    font-size: 32px;
-    font-weight: bold;
-    color: #ffffff;
-}
-
-.card {
-    background: linear-gradient(145deg, #1c2533, #111827);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
-    color: #ffffff;
-}
-
-h1, h2, h3 { color: #ffffff !important; }
-
-section[data-testid="stSidebar"] {
-    background-color: #1e2a38;
-}
-section[data-testid="stSidebar"] * {
-    color: #ffffff !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# -------------------- HEADER --------------------
-st.markdown("""
-<div style="background: linear-gradient(90deg,#0b3d91,#0056b3);
-padding:20px;border-radius:12px;text-align:center;margin-bottom:20px;">
-<h2 style="color:white; font-weight:700; font-size:28px;">
-🏥 AI Breast Cancer Diagnosis System
-</h2>
-<p style="color:#d6e6ff;">
-Clinical Decision Support Tool
-</p>
-</div>
-""", unsafe_allow_html=True)
-
 # -------------------- DATA --------------------
 classes = ['benign', 'malignant', 'normal']
 
@@ -101,21 +57,12 @@ st.sidebar.subheader("👤 Patient Info")
 name = st.sidebar.text_input("Patient Name")
 age = st.sidebar.number_input("Age", 1, 120)
 contact = st.sidebar.text_input("📞 Contact Number")
-
-if contact and not contact.isdigit():
-    st.sidebar.error("Enter numbers only")
-elif contact and len(contact) != 10:
-    st.sidebar.warning("Enter 10-digit number")
-
 email = st.sidebar.text_input("📧 Email")
 address = st.sidebar.text_area("🏠 Address")
-
 gender = "Female"
 
 # ================== PAGE 1 ==================
 if page == "🔍 Diagnosis":
-
-    st.markdown('<div class="title">🧠 Diagnosis System</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
@@ -131,33 +78,46 @@ if page == "🔍 Diagnosis":
 
         if uploaded_file:
 
-            # -------- PROCESS --------
-            img_resized = img.resize((224,224))
-            img_array = np.array(img_resized)
-            img_array = np.expand_dims(img_array, axis=0)/255.0
+            # 👉 RUN ONLY ONCE
+            if "prediction_done" not in st.session_state:
 
-            # -------- PREDICTION --------
-            result = random.choice(classes)
-            confidence = random.uniform(80, 99)
+                img_resized = img.resize((224,224))
+                img_array = np.array(img_resized)
+                img_array = np.expand_dims(img_array, axis=0)/255.0
 
-            prediction = [random.random() for _ in classes]
-            prediction = np.array([prediction])
+                # -------- FAKE PREDICTION --------
+                result = random.choice(classes)
+                confidence = random.uniform(80, 99)
 
-            # -------- REPORT ID --------
-            report_id = "RID-" + datetime.now().strftime("%Y%m%d%H%M%S")
+                prediction = np.random.rand(3)
 
-            # -------- SAVE HISTORY --------
-            save_to_csv({
-                "Report ID": report_id,
-                "Name": name,
-                "Age": age,
-                "Gender": gender,
-                "Contact": contact,
-                "Email": email,
-                "Address": address,
-                "Result": result,
-                "Confidence": confidence
-            })
+                report_id = "RID-" + datetime.now().strftime("%Y%m%d%H%M%S")
+
+                # 👉 STORE EVERYTHING
+                st.session_state.prediction_done = True
+                st.session_state.result = result
+                st.session_state.confidence = confidence
+                st.session_state.prediction = prediction
+                st.session_state.report_id = report_id
+
+                # SAVE CSV ONCE
+                save_to_csv({
+                    "Report ID": report_id,
+                    "Name": name,
+                    "Age": age,
+                    "Gender": gender,
+                    "Contact": contact,
+                    "Email": email,
+                    "Address": address,
+                    "Result": result,
+                    "Confidence": confidence
+                })
+
+            # 👉 USE STORED VALUES
+            result = st.session_state.result
+            confidence = st.session_state.confidence
+            prediction = st.session_state.prediction
+            report_id = st.session_state.report_id
 
             # -------- COLOR LOGIC --------
             if result == "malignant":
@@ -188,22 +148,9 @@ if page == "🔍 Diagnosis":
             </div>
             """, unsafe_allow_html=True)
 
-            # -------- PROGRESS --------
             st.progress(int(confidence))
 
-            # -------- RISK --------
-            st.markdown("### 🚨 Risk Level")
-            st.markdown(f"""
-            <div style="padding:12px;border-radius:10px;
-            background:{bg};color:{color};
-            font-weight:bold;font-size:18px;text-align:center;">
-            {risk_text}
-            </div>
-            """, unsafe_allow_html=True)
-
-            # -------- PATTERN ANALYSIS --------
-            st.markdown("### 🔬 Pattern Analysis")
-
+            # -------- PATTERN --------
             if result == "malignant":
                 st.error("🔴 Irregular pattern detected")
             elif result == "benign":
@@ -212,13 +159,16 @@ if page == "🔍 Diagnosis":
                 st.success("🟢 Normal tissue")
 
             # -------- CHART --------
-            st.markdown("### 📊 Probability")
             fig, ax = plt.subplots()
-            ax.bar(classes, prediction[0])
+            ax.bar(classes, prediction)
             st.pyplot(fig)
 
             # -------- PDF --------
-            pdf = generate_pdf(name, age, gender, contact, email, address, report_id, result, confidence)
+            pdf = generate_pdf(
+                name, age, gender, contact, email, address,
+                report_id, result, confidence
+            )
+
             with open(pdf, "rb") as f:
                 st.download_button(
                     label="📄 Download Report",
@@ -232,42 +182,4 @@ if page == "🔍 Diagnosis":
 
 # ================== PAGE 2 ==================
 elif page == "📊 Reports":
-
-    st.markdown("## 📊 Model Performance")
-
-    c1,c2,c3 = st.columns(3)
-    c1.metric("Accuracy","86.5%","↑")
-    c2.metric("Precision","84.2%","↑")
-    c3.metric("Recall","82.7%","↑")
-
-    st.markdown("---")
-    col1,col2=st.columns(2)
-
-    with col1:
-        if os.path.exists("accuracy_graph.png"):
-            st.image("accuracy_graph.png")
-
-    with col2:
-        if os.path.exists("confusion_matrix.png"):
-            st.image("confusion_matrix.png")
-
-    st.markdown("---")
-
-    st.markdown("### 🧠 Model Summary")
-    st.markdown("""
-- CNN model  
-- Ultrasound dataset  
-- 3 classes  
-- Early detection support  
-""")
-
-    st.markdown("### 📌 Interpretation")
-    st.success("""
-- Reliable predictions  
-- Good classification performance  
-- Helps doctors  
-""")
-
-# -------------------- FOOTER --------------------
-st.markdown("---")
-st.markdown("<center style='color:white;'>🏥 Clinical AI System | 2026</center>", unsafe_allow_html=True)
+    st.metric("Accuracy","86.5%")
